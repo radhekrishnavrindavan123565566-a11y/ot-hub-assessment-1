@@ -3,14 +3,21 @@ import axios from 'axios';
 /**
  * Central Axios instance.
  *
- * - In production / when VITE_API_URL is set, calls go directly to the
- *   deployed backend (e.g. https://ot-hub-api.vercel.app/api).
- * - In local dev without VITE_API_URL, falls back to '/api' so the
- *   Vite dev-server proxy to localhost:3000 still works.
+ * Priority order for the base URL:
+ *   1. VITE_API_URL env var (set in .env locally or in Vercel project settings)
+ *   2. Hardcoded production fallback — guarantees the deployed frontend always
+ *      points to the correct API even if the env var is missing at build time.
  *
- * All calls automatically attach the JWT and redirect to /login on 401.
+ * Local dev: set VITE_API_URL= (empty) in client/.env and use the Vite proxy,
+ * OR set VITE_API_URL=http://localhost:3000/api to bypass the proxy entirely.
  */
-const BASE_URL = import.meta.env.VITE_API_URL || '/api';
+const PROD_API = 'https://ot-hub-api.vercel.app/api';
+
+const BASE_URL = import.meta.env.VITE_API_URL
+  ? import.meta.env.VITE_API_URL
+  : typeof window !== 'undefined' && window.location.hostname !== 'localhost'
+    ? PROD_API        // deployed but env var missing → use hardcoded URL
+    : '/api';         // local dev → use Vite proxy
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -34,7 +41,6 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       localStorage.removeItem('ot_hub_token');
       localStorage.removeItem('ot_hub_user');
-      // Only redirect if not already on the login page
       if (!window.location.pathname.includes('/login')) {
         window.location.href = '/login';
       }

@@ -42,6 +42,15 @@ class SignupService {
     }
 
     const signup = await Signup.create({ slot: slotId, employee: employeeId });
+
+    await auditService.log({
+      action: 'signup_created',
+      performedBy: employeeId,
+      targetUser: employeeId,
+      targetSlot: slotId,
+      newValue: { status: 'pending' },
+    });
+
     return signup.populate('slot');
   }
 
@@ -188,6 +197,8 @@ class SignupService {
       throw ApiError.badRequest(`Cannot withdraw a signup with status '${signup.status}'`);
     }
 
+    const previousStatus = signup.status; // capture before mutation
+
     if (signup.status === 'approved') {
       const hoursUntilStart = (new Date(signup.slot.startTime) - new Date()) / (1000 * 60 * 60);
       if (hoursUntilStart < 24) {
@@ -213,7 +224,7 @@ class SignupService {
       targetUser: employeeId,
       targetSignup: signup._id,
       targetSlot: signup.slot._id,
-      previousValue: { status: 'approved' },
+      previousValue: { status: previousStatus },
       newValue: { status: 'withdrawn' },
     });
 

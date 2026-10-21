@@ -3,8 +3,10 @@ const { MongoMemoryReplSet } = require('mongodb-memory-server');
 
 let replSet;
 
+// Extended timeout for replica set startup
+jest.setTimeout(60000);
+
 beforeAll(async () => {
-  // Use a replica set so MongoDB transactions work in tests
   replSet = await MongoMemoryReplSet.create({ replSet: { count: 1 } });
   const uri = replSet.getUri();
   await mongoose.connect(uri);

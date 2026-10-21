@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const AUDIT_ACTIONS = [
+  'signup_created',
   'signup_approved',
   'signup_rejected',
   'signup_withdrawn',

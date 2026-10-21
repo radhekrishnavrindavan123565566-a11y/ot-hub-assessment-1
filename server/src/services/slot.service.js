@@ -17,7 +17,7 @@ class SlotService {
     const now = new Date();
 
     if (start <= now) {
-      throw ApiError.badRequest('Slot must be in the future');
+      throw ApiError.badRequest('Slot must start in the future');
     }
     if (end <= start) {
       throw ApiError.badRequest('End time must be after start time');
@@ -25,17 +25,16 @@ class SlotService {
 
     const duration = slotDurationHours(start, end);
     if (duration > 6) {
-      throw ApiError.badRequest('Slot cannot be longer than 6 hours');
+      throw ApiError.badRequest('Slot cannot be longer than 6 hours (BR-1)');
     }
 
-    // Verify start and end are on the same calendar day (IST).
-    // We compare the `date` string against the IST date derived from startTime/endTime.
+    // Verify start and end fall on the same IST calendar date as `date`
     const toISTDateStr = (d) => {
       const ist = new Date(d.getTime() + 5.5 * 60 * 60 * 1000);
       return ist.toISOString().substring(0, 10);
     };
     if (toISTDateStr(start) !== date || toISTDateStr(end) !== date) {
-      throw ApiError.badRequest('Slot start and end must fall on the given date (IST)');
+      throw ApiError.badRequest('Slot start and end must fall on the given date (IST) (BR-1)');
     }
   }
 
@@ -127,13 +126,14 @@ class SlotService {
       throw ApiError.forbidden('You can only cancel slots in your own department');
     }
 
+    const previousStatus = slot.status; // capture before mutation (could be 'open' or 'filled')
+
     // Cancel all active signups for this slot
     await Signup.updateMany(
       { slot: slotId, status: { $in: ['pending', 'approved'] } },
       { $set: { status: 'withdrawn', withdrawnAt: new Date() } }
     );
 
-    // Decrement approvedCount back — we'll just zero it out
     slot.status = 'cancelled';
     slot.approvedCount = 0;
     slot.cancelledAt = new Date();
@@ -144,7 +144,7 @@ class SlotService {
       action: 'slot_cancelled',
       performedBy: managerId,
       targetSlot: slotId,
-      previousValue: { status: 'open' },
+      previousValue: { status: previousStatus },
       newValue: { status: 'cancelled' },
     });
 

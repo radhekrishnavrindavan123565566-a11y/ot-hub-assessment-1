@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getUsersApi, createUserApi, updateOtCapApi } from '../../api/users.api';
 import Spinner from '../../components/common/Spinner';

@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "src/index.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "src/index.js"
+    }
+  ],
+  "env": {
+    "MONGODB_URI": "mongodb+srv://radhekrishnavrindavan123565566_db_user:Hkz7niCom56ivRuj@cluster0.ilnacfe.mongodb.net/ot-hub?retryWrites=true&w=majority",
+    "JWT_SECRET": "ot_hub_jwt_secret_sundar_precision_works_2024",
+    "JWT_EXPIRES_IN": "8h",
+    "NODE_ENV": "production",
+    "CLIENT_URL_PROD": "https://ot-hub.vercel.app"
+  }
+}

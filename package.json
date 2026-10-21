@@ -1,0 +1,13 @@
+{
+  "name": "ot-hub",
+  "version": "1.0.0",
+  "description": "OT Hub – Sundar Precision Works overtime management system",
+  "scripts": {
+    "install:all": "npm install --prefix server && npm install --prefix client",
+    "mongo": "npm run mongo --prefix server",
+    "dev:server": "npm run dev --prefix server",
+    "dev:client": "npm run dev --prefix client",
+    "seed": "npm run seed --prefix server",
+    "test": "npm test --prefix server"
+  }
+}

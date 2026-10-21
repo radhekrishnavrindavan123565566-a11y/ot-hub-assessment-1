@@ -1,0 +1,164 @@
+### OT Hub API — HTTP file
+### Use with VS Code REST Client extension or import into Postman
+
+@baseUrl = http://localhost:3000/api
+@adminToken = PASTE_TOKEN_HERE
+@managerToken = PASTE_TOKEN_HERE
+@employeeToken = PASTE_TOKEN_HERE
+
+# ─── AUTH ────────────────────────────────────────────────────────────────────
+
+### Login as Admin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@sundar.com",
+  "password": "Admin@1234"
+}
+
+###
+
+### Login as Machining Manager
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "manager.machining@sundar.com",
+  "password": "Manager@1234"
+}
+
+###
+
+### Login as Employee (Ravi)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "ravi@sundar.com",
+  "password": "Employee@1234"
+}
+
+###
+
+### Get current user
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{adminToken}}
+
+# ─── USERS ───────────────────────────────────────────────────────────────────
+
+### List users (Admin)
+GET {{baseUrl}}/users?page=1&limit=10
+Authorization: Bearer {{adminToken}}
+
+###
+
+### Create user (Admin)
+POST {{baseUrl}}/users
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "New Employee",
+  "email": "newemployee@sundar.com",
+  "password": "Employee@1234",
+  "role": "employee",
+  "department": "Quality"
+}
+
+###
+
+### Update OT cap (Admin)
+PATCH {{baseUrl}}/users/USER_ID_HERE/ot-cap
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "weeklyOtCapHours": 10
+}
+
+# ─── SLOTS ───────────────────────────────────────────────────────────────────
+
+### List slots
+GET {{baseUrl}}/slots?page=1&limit=10&status=open
+Authorization: Bearer {{employeeToken}}
+
+###
+
+### Create slot (Manager)
+POST {{baseUrl}}/slots
+Authorization: Bearer {{managerToken}}
+Content-Type: application/json
+
+{
+  "title": "Evening CNC Run",
+  "department": "Machining",
+  "date": "2026-10-25",
+  "startTime": "2026-10-25T12:30:00.000Z",
+  "endTime": "2026-10-25T15:30:00.000Z",
+  "headcountRequired": 3
+}
+
+###
+
+### Cancel slot (Manager)
+POST {{baseUrl}}/slots/SLOT_ID_HERE/cancel
+Authorization: Bearer {{managerToken}}
+
+###
+
+### Sign up for slot (Employee)
+POST {{baseUrl}}/slots/SLOT_ID_HERE/signups
+Authorization: Bearer {{employeeToken}}
+
+###
+
+### Get signups for slot (Manager)
+GET {{baseUrl}}/slots/SLOT_ID_HERE/signups
+Authorization: Bearer {{managerToken}}
+
+# ─── SIGNUPS ─────────────────────────────────────────────────────────────────
+
+### Approve signup (Manager)
+PATCH {{baseUrl}}/signups/SIGNUP_ID_HERE/decision
+Authorization: Bearer {{managerToken}}
+Content-Type: application/json
+
+{
+  "decision": "approved"
+}
+
+###
+
+### Reject signup (Manager)
+PATCH {{baseUrl}}/signups/SIGNUP_ID_HERE/decision
+Authorization: Bearer {{managerToken}}
+Content-Type: application/json
+
+{
+  "decision": "rejected"
+}
+
+###
+
+### Withdraw signup (Employee)
+DELETE {{baseUrl}}/signups/SIGNUP_ID_HERE
+Authorization: Bearer {{employeeToken}}
+
+###
+
+### My signup history (Employee)
+GET {{baseUrl}}/me/signups?page=1&limit=10
+Authorization: Bearer {{employeeToken}}
+
+# ─── REPORTS ─────────────────────────────────────────────────────────────────
+
+### Monthly report (Admin/Manager)
+GET {{baseUrl}}/reports/monthly?month=2026-10
+Authorization: Bearer {{adminToken}}
+
+# ─── AUDIT LOG ───────────────────────────────────────────────────────────────
+
+### Get audit logs (Admin)
+GET {{baseUrl}}/audit-logs?page=1&limit=20
+Authorization: Bearer {{adminToken}}

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OT Hub – Sundar Precision Works</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                50:  '#eff6ff',
+                100: '#dbeafe',
+                200: '#bfdbfe',
+                300: '#93c5fd',
+                400: '#60a5fa',
+                500: '#3b82f6',
+                600: '#2563eb',
+                700: '#1d4ed8',
+                800: '#1e40af',
+                900: '#1e3a8a',
+              },
+            },
+            animation: {
+              'fade-in':      'fadeIn 0.4s ease-out',
+              'slide-up':     'slideUp 0.4s ease-out',
+              'slide-down':   'slideDown 0.3s ease-out',
+              'scale-in':     'scaleIn 0.25s ease-out',
+              'bounce-in':    'bounceIn 0.5s cubic-bezier(0.36,0.07,0.19,0.97)',
+              'pulse-soft':   'pulseSoft 2s ease-in-out infinite',
+              'shimmer':      'shimmer 1.5s infinite',
+              'float':        'float 3s ease-in-out infinite',
+              'spin-slow':    'spin 3s linear infinite',
+            },
+            keyframes: {
+              fadeIn:    { from: { opacity: '0' }, to: { opacity: '1' } },
+              slideUp:   { from: { opacity: '0', transform: 'translateY(20px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
+              slideDown: { from: { opacity: '0', transform: 'translateY(-12px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
+              scaleIn:   { from: { opacity: '0', transform: 'scale(0.95)' }, to: { opacity: '1', transform: 'scale(1)' } },
+              bounceIn:  { '0%':{ transform:'scale(0.3)',opacity:'0' }, '50%':{ transform:'scale(1.05)' }, '70%':{ transform:'scale(0.9)' }, '100%':{ transform:'scale(1)',opacity:'1' } },
+              pulseSoft: { '0%,100%':{ opacity:'1' }, '50%':{ opacity:'.6' } },
+              shimmer:   { '0%':{ backgroundPosition:'-200% 0' }, '100%':{ backgroundPosition:'200% 0' } },
+              float:     { '0%,100%':{ transform:'translateY(0)' }, '50%':{ transform:'translateY(-8px)' } },
+            },
+            backdropBlur: { xs: '2px' },
+          },
+        },
+      };
+    </script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+      * { font-family: 'Inter', system-ui, sans-serif; }
+      ::-webkit-scrollbar { width: 6px; height: 6px; }
+      ::-webkit-scrollbar-track { background: #f1f5f9; }
+      ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+      ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+      .glass { background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+      .glass-dark { background: rgba(30,41,59,0.85); backdrop-filter: blur(12px); }
+      .gradient-text { background: linear-gradient(135deg, #2563eb, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+      .gradient-bg { background: linear-gradient(135deg, #1e40af 0%, #3730a3 50%, #7c3aed 100%); }
+      .card-hover { transition: all 0.2s ease; }
+      .card-hover:hover { transform: translateY(-2px); box-shadow: 0 20px 40px rgba(0,0,0,0.12); }
+      .btn-press:active { transform: scale(0.97); }
+      .shimmer-bg { background: linear-gradient(90deg, #f0f4f8 25%, #e2e8f0 50%, #f0f4f8 75%); background-size: 200% 100%; }
+      .input-focus { transition: all 0.2s ease; }
+      .input-focus:focus { box-shadow: 0 0 0 3px rgba(37,99,235,0.15); }
+      .row-hover { transition: background 0.15s ease; }
+      .row-hover:hover { background: #f8fafc; }
+      .nav-link { position: relative; }
+      .nav-link::after { content:''; position:absolute; bottom:-2px; left:0; width:0; height:2px; background:white; transition:width 0.2s ease; }
+      .nav-link:hover::after { width:100%; }
+      .page-enter { animation: slideUp 0.35s ease-out; }
+    </style>
+  </head>
+  <body class="bg-slate-50">
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
